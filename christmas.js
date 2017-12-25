@@ -1,7 +1,7 @@
 var Christmas = (function() {
     var RANDOM_COLOR_LETTERS = '0123456789ABCDEF';
     var DELTA_X = 100;
-    var DELTA_Y = 300;
+    var DELTA_Y = 200;
     var TRUNK_DIVISOR = 4;
     var TRUNK_SCALE = 0.8;
     var LIGHT_UPDATES_MILLIS = 3000;
