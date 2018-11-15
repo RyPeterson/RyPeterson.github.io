@@ -1,75 +1,104 @@
+const RANDOM_COLOR_LETTERS = '0123456789ABCDEF';
+const TREE_TRUNK = '#3e3208' /*brown*/;
+const TREE_LEAVES = '#2f8511' /*green*/;
+const LIGHT_UPDATES_MILLIS = 3000;
+const MAX_LEVEL = 12;
+const SCALE_FACTOR = 0.66;
+
+class RandomColorGenerator {
+    constructor() {
+
+    }
+
+    randomColor() {
+        var color = '#';
+        for (var i = 0; i < 6; i++) {
+            color += RANDOM_COLOR_LETTERS[Math.floor(Math.random() * RANDOM_COLOR_LETTERS.length)];
+        }
+        return color;
+    }
+}
+
+class Tree {
+    constructor(deltaX, deltaY, trunkDivisor, trunkScale, context) {
+        this.deltaX = deltaX;
+        this.deltaY = deltaY;
+        this.trunkDivisor = trunkDivisor;
+        this.trunkScale = trunkScale;
+        this.context = context;
+        this.randomColorGenerator = new RandomColorGenerator();
+    }
+
+    drawTree(startX, startY, trunkWidth, level) {
+        if(level < MAX_LEVEL) {
+            var deltaX = this.deltaX / (level + 1);
+            var deltaY = this.deltaY / (level + 1);
+            var topRightX = startX + SCALE_FACTOR * deltaX;
+            var topRightY = startY - SCALE_FACTOR * deltaY;
+  
+            var topLeftX = startX - SCALE_FACTOR * deltaX;
+            var topLeftY = startY - SCALE_FACTOR * deltaY;
+
+            var color = level < Math.floor(MAX_LEVEL / 2) ? TREE_TRUNK : TREE_LEAVES;
+            var decorateTree = level >= 10;
+
+            this._rightBranch(startX, startY, topRightX, topRightY, trunkWidth, color, decorateTree);
+            this._leftBranch(startX, startY, topLeftX, topLeftY, trunkWidth, color, decorateTree);
+
+            this.drawTree(topRightX, topRightY, trunkWidth * this.trunkScale, level + 1);
+            this.drawTree(topLeftX, topLeftY, trunkWidth * this.trunkScale, level + 1);
+        }
+    }
+
+    _leftBranch(x, y, topX, topY, trunkWidth, color, decorate) {
+        this._branch(x - trunkWidth / this.trunkDivisor, y, trunkWidth, topX, topY, decorate, color);
+    }
+
+    _rightBranch(x, y, topX, topY, trunkWidth, color, decorate) {
+        this._branch(x + trunkWidth / this.trunkDivisor, y, trunkWidth, topX, topY, decorate, color);
+    }
+
+    _branch(x, y, trunkWidth, topX, topY, decorate, color) {
+        this.context.beginPath();
+        this.context.moveTo(x, y);
+        this.context.quadraticCurveTo(x, y - trunkWidth, topX, topY);
+        this.context.lineWidth = trunkWidth;
+        this.context.lineCap = 'round';
+        this.context.strokeStyle = color;
+        this.context.stroke();
+
+        if(decorate) {
+            var self = this;
+            self._createDecoration(x, y);
+            //Update the colors on a timer. Not the epitome of efficiency.
+            setInterval(function() {self._createDecoration(x, y)}, LIGHT_UPDATES_MILLIS);
+        }
+    }
+
+    _createDecoration(x, y) {
+        this.context.beginPath();
+        var decorationSize = 2
+        this.context.arc(x, y, decorationSize, 0, 2 * Math.PI);
+        this.context.fillStyle = this.randomColorGenerator.randomColor();
+        this.context.fill();
+    }
+}
+
 var Christmas = (function() {
-    var RANDOM_COLOR_LETTERS = '0123456789ABCDEF';
-    var DELTA_X = 100;
-    var DELTA_Y = 200;
-    var TRUNK_DIVISOR = 4;
+    var DELTA_X = 350;
+    var DELTA_Y = 300;
+    var TRUNK_DIVISOR = 1024;
     var TRUNK_SCALE = 0.8;
-    var LIGHT_UPDATES_MILLIS = 3000;
-    var TREE_TRUNK = '#3e3208' /*brown*/;
-    var TREE_LEAVES = '#2f8511' /*green*/;
 
     function _drawTree(startX, startY, trunkWidth, level) {
         var canvas = document.getElementById('canvas');
         var context = canvas.getContext('2d');
 
-        if(level < 12) {
-            var deltaX = DELTA_X / (level + 1);
-            var deltaY = DELTA_Y / (level + 1);
-            var topRightX = startX + Math.random() * deltaX;
-            var topRightY = startY - Math.random() * deltaY;
-  
-            var topLeftX = startX - Math.random() * deltaX;
-            var topLeftY = startY - Math.random() * deltaY;
+        new Tree(DELTA_X, DELTA_Y, TRUNK_DIVISOR, TRUNK_SCALE, context).drawTree(startX, startY, trunkWidth, level);
+    }
 
-            var color = level < 6 ? TREE_TRUNK : TREE_LEAVES;
-            var decorateTree = level > 10;
+    const PHRASES = {
 
-            _rightBranch(startX, startY, topRightX, topRightY, trunkWidth, color, decorateTree);
-            _leftBranch(startX, startY, topLeftX, topLeftY, trunkWidth, color, decorateTree);
-
-            _drawTree(topRightX, topRightY, trunkWidth * TRUNK_SCALE, level + 1);
-            _drawTree(topLeftX, topLeftY, trunkWidth * TRUNK_SCALE, level + 1);
-        }
-
-        function _leftBranch(x, y, topX, topY, trunkWidth, color, decorate) {
-            _branch(x - trunkWidth / TRUNK_DIVISOR, y, trunkWidth, topX, topY, decorate);
-        }
-
-        function _rightBranch(x, y, topX, topY, trunkWidth, color, decorate) {
-            _branch(x + trunkWidth / TRUNK_DIVISOR, y, trunkWidth, topX, topY, decorate);
-        }
-
-        function _branch(x, y, trunkWidth,  topX, topY, decorate) {
-            context.beginPath();
-            context.moveTo(x, y);
-            context.quadraticCurveTo(x, y - trunkWidth, topX, topY);
-            context.lineWidth = trunkWidth;
-            context.lineCap = 'round';
-            context.strokeStyle = color;
-            context.stroke();
-
-            if(decorate) {
-                _createDecoration(x, y);
-                //Update the colors on a timer. Not the epitome of efficiency.
-                setInterval(function() {_createDecoration(x, y)}, LIGHT_UPDATES_MILLIS);
-            }
-        }
-
-        function _createDecoration(x, y) {
-            context.beginPath();
-            var decorationSize = 2
-            context.arc(x, y, decorationSize, 0, 2*Math.PI);
-            context.fillStyle = _getRandomColor();
-            context.fill();
-        }
-
-        function _getRandomColor() {
-            var color = '#';
-            for (var i = 0; i < 6; i++) {
-              color += RANDOM_COLOR_LETTERS[Math.floor(Math.random() * 16)];
-            }
-            return color;
-        }
     }
 
     function _drawGreeting(x, y) {
