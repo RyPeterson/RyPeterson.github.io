@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/static/css/main.bfce97d8.chunk.css",
+    "main.js": "/static/js/main.e192f5cb.chunk.js",
+    "main.js.map": "/static/js/main.e192f5cb.chunk.js.map",
+    "runtime~main.js": "/static/js/runtime~main.a8a9905a.js",
+    "runtime~main.js.map": "/static/js/runtime~main.a8a9905a.js.map",
+    "static/js/2.ef75dfdf.chunk.js": "/static/js/2.ef75dfdf.chunk.js",
+    "static/js/2.ef75dfdf.chunk.js.map": "/static/js/2.ef75dfdf.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.41b6bda31553a391be49c9cccbf0bf38.js": "/precache-manifest.41b6bda31553a391be49c9cccbf0bf38.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/main.bfce97d8.chunk.css.map": "/static/css/main.bfce97d8.chunk.css.map",
+    "static/media/chicken.svg": "/static/media/chicken.e668faa2.svg",
+    "static/media/cow.svg": "/static/media/cow.4b722d5e.svg",
+    "static/media/duck.svg": "/static/media/duck.54f3e23d.svg",
+    "static/media/goat.svg": "/static/media/goat.74585008.svg",
+    "static/media/goose.svg": "/static/media/goose.fd0fd882.svg",
+    "static/media/horse.svg": "/static/media/horse.821d41f4.svg",
+    "static/media/llama.svg": "/static/media/llama.c2e39b78.svg",
+    "static/media/pig.svg": "/static/media/pig.5f2c34e0.svg",
+    "static/media/rabbit.svg": "/static/media/rabbit.d2a6fafa.svg",
+    "static/media/turkey.svg": "/static/media/turkey.2d9e0cf4.svg"
+  }
+}
